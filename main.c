@@ -25,7 +25,8 @@ enum ForthType_E {
 };
 typedef enum ForthType_E ForthType;
 ForthType whichType(char* name) {
-    char* numberChars = "-0123456789.";
+    //char* numberChars = "-0123456789.";
+    char* numberChars = "-0123456789";
     int i;
     for (i = 0; i < strlen(name); i++) {
         //if a non-digit appears in the name
@@ -82,6 +83,14 @@ void executeWord(char* word) {
 	}
 
 	//else, go through the dictionary
+
+	//success/error handling:
+	STACK_OVERFLOW_ERROR:
+    ;
+	STACK_UNDERFLOW_ERROR:
+    ;
+	WORD_SUCCESS:
+    ;
 }
 
 
