@@ -46,71 +46,120 @@ typedef struct ForthToken_S ForthToken;
 //establish forth environment
 STACK_TYPE stack[STACK_MAX_LENGTH];
 int stackLength = 0;
-char* pool = malloc(POOL_SIZE);
-ForthWord dictionary[DICTIONARY_LENGTH];
+char* pool; //initialized in main
+ForthWord dictionary[DICTIONARY_LENGTH]; //initialized in main
 
-STACK_TYPE popStack() {
+enum StackError_E {
+    STACK_SUCCESS,
+    STACK_OVERFLOW_ERROR,
+    STACK_UNDERFLOW_ERROR
+};
+typedef enum StackError_E StackError;
+struct StackResult_S {
+    StackError e;
+    STACK_TYPE result;
+};
+typedef struct StackResult_S StackResult;
+StackResult popStack() {
+    StackResult out;
     if (stackLength <= 0) {
-        goto STACK_UNDERFLOW_ERROR;
+        out.e = STACK_UNDERFLOW_ERROR;
+        return out;
     }
-    return stack[--stackLength];
+    out.e = STACK_SUCCESS;
+    out.result = stack[--stackLength];
+    return out;
 }
-STACK_TYPE peepStack() {
+StackResult peepStack() {
+    StackResult out;
     if (stackLength <= 0) {
-        goto STACK_UNDERFLOW_ERROR;
+        out.e = STACK_UNDERFLOW_ERROR;
+        return out;
     }
-    return stack[stackLength - 1];
+    out.e = STACK_SUCCESS;
+    out.result = stack[stackLength - 1];
+    return out;
 }
-void pushStack(STACK_TYPE in) {
+StackResult pushStack(STACK_TYPE in) {
+    StackResult out;
     if (stackLength >= STACK_MAX_LENGTH) {
-        goto STACK_OVERFLOW_ERROR;
+        out.e = STACK_OVERFLOW_ERROR;
     }
+    out.e = STACK_SUCCESS;
     stack[stackLength++] = in;
+    return out;
 }
 void executeWord(char* word) {
 	//TODO
 	//execute a builtin
 	if (strcmp(word, "+")) {
-        int a = popStack();
-        int b = popStack();
-        pushStack(a + b);
+        StackResult a = popStack();
+        StackResult b = popStack();
+        if (a.e != STACK_SUCCESS || b.e != STACK_SUCCESS) {
+            goto STACK_UNDERFLOW_ERROR;
+        }
+        pushStack(a.result + b.result);
 	}
 	else if (strcmp(word, "-")) {
-        int a = popStack();
-        int b = popStack();
-        pushStack(b - a);
+        StackResult a = popStack();
+        StackResult b = popStack();
+        if (a.e != STACK_SUCCESS || b.e != STACK_SUCCESS) {
+            goto STACK_UNDERFLOW_ERROR;
+        }
+        pushStack(b.result - a.result);
 	}
 	else if (strcmp(word, "*")) {
-        int a = popStack();
-        int b = popStack();
-        pushStack(a * b);
+        StackResult a = popStack();
+        StackResult b = popStack();
+        if (a.e != STACK_SUCCESS || b.e != STACK_SUCCESS) {
+            goto STACK_UNDERFLOW_ERROR;
+        }
+        pushStack(a.result * b.result);
 	}
 	else if (strcmp(word, "/")) {
-        int a = popStack();
-        int b = popStack();
-        pushStack(b / a);
+        StackResult a = popStack();
+        StackResult b = popStack();
+        if (a.e != STACK_SUCCESS || b.e != STACK_SUCCESS) {
+            goto STACK_UNDERFLOW_ERROR;
+        }
+        pushStack(b.result / a.result);
 	}
     else if (strcmp(word, "DIVMOD")) {
-        int a = popStack();
-        int b = popStack();
-        pushStack(b % a);
-        pushStack(b / a);
+        StackResult a = popStack();
+        StackResult b = popStack();
+        if (a.e != STACK_SUCCESS || b.e != STACK_SUCCESS) {
+            goto STACK_UNDERFLOW_ERROR;
+        }
+        pushStack(b.result % a.result);
+        pushStack(b.result / a.result);
 	}
 	else if (strcmp(word, "SWAP")) {
-        int a = popStack();
-        int b = popStack();
-        pushStack(a);
-        pushStack(b);
+        StackResult a = popStack();
+        StackResult b = popStack();
+        if (a.e != STACK_SUCCESS || b.e != STACK_SUCCESS) {
+            goto STACK_UNDERFLOW_ERROR;
+        }
+        pushStack(a.result);
+        pushStack(b.result);
 	}
 	else if (strcmp(word, "DUP")) {
-        int a = peepStack();
-        pushStack(a);
+        StackResult a = peepStack();
+        if (a.e != STACK_SUCCESS) {
+            goto STACK_UNDERFLOW_ERROR;
+        }
+        StackResult b = pushStack(a.result);
+        if (b.e != STACK_SUCCESS) {
+            goto STACK_OVERFLOW_ERROR;
+        }
 	}
 	else if (strcmp(word, "ROT")) {
 
 	}
 	else if (strcmp(word, "DROP")) {
-        popStack();
+        StackResult a = popStack();
+        if (a.e != STACK_SUCCESS) {
+            goto STACK_UNDERFLOW_ERROR;
+        }
 	}
 	else if (strcmp(word, ".")) {
 
@@ -124,19 +173,33 @@ void executeWord(char* word) {
     }
 
 	//success/error handling:
+    //first, make sure these aren't ran accidentally
+    //if none of these errors are caught and jumped to,
+    //assume the word ran successfully
+    goto WORD_SUCCESS;
 	STACK_OVERFLOW_ERROR:
-    ;
+    printf("STACK OVERFLOW ERROR\n");
+    goto WORD_END_HANDLING;
 	STACK_UNDERFLOW_ERROR:
-    ;
+    printf("STACK UNDERFLOW ERROR\n");
+    goto WORD_END_HANDLING;
     UNKNOWN_WORD_ERROR:
-    ;
+    printf("UNKNOWN WORD %s\n", word);
+    goto WORD_END_HANDLING;
 	WORD_SUCCESS:
+    printf("RAN %s SUCCESSFULLY\n");
+    printf("TOP OF STACK: %i %i %i\n", stack[0], stack[1], stack[2]);
+    goto WORD_END_HANDLING;
+    WORD_END_HANDLING:
     ;
 }
 
 
 int main() {
     printf("tiny-forth, by Aearnus. version %s.\nTHIS SOFTWARE COMES WITH ABSOLUTELY NO WARRANTY. IT MAY COMPLETELY DESTROY YOUR COMPUTER.\n", VERSION);
+    //initialize environment
+    pool = malloc(POOL_SIZE);
+    //dictionary = calloc(DICTIONARY_LENGTH, sizeof(ForthWord));
     for (;;) {
         //begin read-compile-execute loop
         //read
@@ -175,4 +238,7 @@ int main() {
 		}
 	//end repl loop
     }
+    //clean up environment
+    free(pool);
+    free(dictionary);
 }
