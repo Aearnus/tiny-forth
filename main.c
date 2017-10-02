@@ -2,7 +2,7 @@
 #define MAX_WORD_SIZE 128
 #define MAX_WORD_LENGTH 1024
 #define MAX_INPUT_LENGTH 1024
-#define STACK_LENGTH 16384
+#define STACK_MAX_LENGTH 16384
 #define STACK_TYPE int64_t
 #define POOL_SIZE 1048576
 #define VERSION "v0.0.1a"
@@ -44,36 +44,73 @@ struct ForthToken_S {
 typedef struct ForthToken_S ForthToken;
 
 //establish forth environment
-STACK_TYPE stack[STACK_LENGTH];
-int stackTopIndex = 0;
+STACK_TYPE stack[STACK_MAX_LENGTH];
+int stackLength = 0;
+char* pool = malloc(POOL_SIZE);
 ForthWord dictionary[DICTIONARY_LENGTH];
 
+STACK_TYPE popStack() {
+    if (stackLength <= 0) {
+        goto STACK_UNDERFLOW_ERROR;
+    }
+    return stack[--stackLength];
+}
+STACK_TYPE peepStack() {
+    if (stackLength <= 0) {
+        goto STACK_UNDERFLOW_ERROR;
+    }
+    return stack[stackLength - 1];
+}
+void pushStack(STACK_TYPE in) {
+    if (stackLength >= STACK_MAX_LENGTH) {
+        goto STACK_OVERFLOW_ERROR;
+    }
+    stack[stackLength++] = in;
+}
 void executeWord(char* word) {
 	//TODO
 	//execute a builtin
 	if (strcmp(word, "+")) {
-
+        int a = popStack();
+        int b = popStack();
+        pushStack(a + b);
 	}
 	else if (strcmp(word, "-")) {
-
+        int a = popStack();
+        int b = popStack();
+        pushStack(b - a);
 	}
 	else if (strcmp(word, "*")) {
-
+        int a = popStack();
+        int b = popStack();
+        pushStack(a * b);
 	}
-	else if (strcmp(word, "/DIV")) {
-
+	else if (strcmp(word, "/")) {
+        int a = popStack();
+        int b = popStack();
+        pushStack(b / a);
+	}
+    else if (strcmp(word, "DIVMOD")) {
+        int a = popStack();
+        int b = popStack();
+        pushStack(b % a);
+        pushStack(b / a);
 	}
 	else if (strcmp(word, "SWAP")) {
-
+        int a = popStack();
+        int b = popStack();
+        pushStack(a);
+        pushStack(b);
 	}
 	else if (strcmp(word, "DUP")) {
-
+        int a = peepStack();
+        pushStack(a);
 	}
 	else if (strcmp(word, "ROT")) {
 
 	}
 	else if (strcmp(word, "DROP")) {
-
+        popStack();
 	}
 	else if (strcmp(word, ".")) {
 
@@ -81,13 +118,17 @@ void executeWord(char* word) {
 	else if (strcmp(word, "EMIT")) {
 
 	}
-
-	//else, go through the dictionary
+    else {
+	//TODO: else, go through the dictionary
+        goto UNKNOWN_WORD_ERROR;
+    }
 
 	//success/error handling:
 	STACK_OVERFLOW_ERROR:
     ;
 	STACK_UNDERFLOW_ERROR:
+    ;
+    UNKNOWN_WORD_ERROR:
     ;
 	WORD_SUCCESS:
     ;
@@ -127,7 +168,7 @@ int main() {
 			//handle numbers first
 			if (tokens[tokenIndex].isA == NUMBER) {
 				STACK_TYPE number;
-				stack[stackTopIndex++] = atoll(tokens[tokenIndex].name);
+				pushStack(atoll(tokens[tokenIndex].name));
 			} else if (tokens[tokenIndex].isA == WORD) {
 				executeWord(tokens[tokenIndex].name);
 			}

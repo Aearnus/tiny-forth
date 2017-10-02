@@ -3,7 +3,7 @@ GCC Options:
 -DMAX_WORD_SIZE: the max size of each word's name, in bytes (default 128)
 -DMAX_WORD_LENGTH: the max length of each word, in words (default 1024)
 -DMAX_INPUT_LENGTH: the max length of each line of input, in words (default 1024)
--DSTACK_LENGTH: the max length of the stack, in sizeof(STACK_TYPE)s (default 16384)
+-DSTACK_MAX_LENGTH: the max length of the stack, in sizeof(STACK_TYPE)s (default 16384)
 -DSTACK_TYPE: the type of data on the stack (default int64_t)
 -DPOOL_SIZE: the size of the variable pool, in sizeof(STACK_TYPE)s (default 1048576, 2^20)
 -DDEBUG: enable debug mode
