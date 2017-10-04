@@ -23,8 +23,6 @@ ForthType whichType(char* name) {
 }
 
 //establish forth environment
-STACK_TYPE stack[STACK_MAX_LENGTH];
-int stackLength = 0;
 char* pool; //initialized in main
 ForthWord dictionary[DICTIONARY_LENGTH];
 

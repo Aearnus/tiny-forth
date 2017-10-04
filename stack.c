@@ -1,5 +1,8 @@
 #include "stack.h"
 
+STACK_TYPE stack[STACK_MAX_LENGTH];
+int stackLength = 0;
+
 StackResult popStack() {
     StackResult out;
     if (stackLength <= 0) {

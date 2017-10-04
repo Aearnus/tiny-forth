@@ -1,38 +1,10 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "run.h"
 #include "directives.h"
 #include "stack.h"
-
-StackResult popStack() {
-    StackResult out;
-    if (stackLength <= 0) {
-        out.e = STACK_UNDERFLOW_ERROR;
-        return out;
-    }
-    out.e = STACK_SUCCESS;
-    out.result = stack[--stackLength];
-    return out;
-}
-
-StackResult peepStack() {
-    StackResult out;
-    if (stackLength <= 0) {
-        out.e = STACK_UNDERFLOW_ERROR;
-        return out;
-    }
-    out.e = STACK_SUCCESS;
-    out.result = stack[stackLength - 1];
-    return out;
-}
-
-StackResult pushStack(STACK_TYPE in) {
-    StackResult out;
-    if (stackLength >= STACK_MAX_LENGTH) {
-        out.e = STACK_OVERFLOW_ERROR;
-    }
-    out.e = STACK_SUCCESS;
-    stack[stackLength++] = in;
-    return out;
-}
 
 //returns if the interpreter must skip ahead steps: ex, there is a definition
 //TODO: function definition: words : and ;

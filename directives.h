@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #define DICTIONARY_LENGTH 1024
 #define MAX_WORD_SIZE 128
 #define MAX_WORD_LENGTH 1024
