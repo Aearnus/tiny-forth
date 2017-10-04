@@ -92,7 +92,7 @@ StackResult pushStack(STACK_TYPE in) {
 void executeWord(char* word) {
 	//TODO
 	//execute a builtin
-	if (strcmp(word, "+")) {
+	if (strcmp(word, "+") == 0) {
         StackResult a = popStack();
         StackResult b = popStack();
         if (a.e != STACK_SUCCESS || b.e != STACK_SUCCESS) {
@@ -100,7 +100,7 @@ void executeWord(char* word) {
         }
         pushStack(a.result + b.result);
 	}
-	else if (strcmp(word, "-")) {
+	else if (strcmp(word, "-") == 0) {
         StackResult a = popStack();
         StackResult b = popStack();
         if (a.e != STACK_SUCCESS || b.e != STACK_SUCCESS) {
@@ -108,7 +108,7 @@ void executeWord(char* word) {
         }
         pushStack(b.result - a.result);
 	}
-	else if (strcmp(word, "*")) {
+	else if (strcmp(word, "*") == 0) {
         StackResult a = popStack();
         StackResult b = popStack();
         if (a.e != STACK_SUCCESS || b.e != STACK_SUCCESS) {
@@ -116,7 +116,7 @@ void executeWord(char* word) {
         }
         pushStack(a.result * b.result);
 	}
-	else if (strcmp(word, "/")) {
+	else if (strcmp(word, "/") == 0) {
         StackResult a = popStack();
         StackResult b = popStack();
         if (a.e != STACK_SUCCESS || b.e != STACK_SUCCESS) {
@@ -124,7 +124,7 @@ void executeWord(char* word) {
         }
         pushStack(b.result / a.result);
 	}
-    else if (strcmp(word, "DIVMOD")) {
+    else if (strcmp(word, "DIVMOD") == 0) {
         StackResult a = popStack();
         StackResult b = popStack();
         if (a.e != STACK_SUCCESS || b.e != STACK_SUCCESS) {
@@ -133,7 +133,7 @@ void executeWord(char* word) {
         pushStack(b.result % a.result);
         pushStack(b.result / a.result);
 	}
-	else if (strcmp(word, "SWAP")) {
+	else if (strcmp(word, "SWAP") == 0) {
         StackResult a = popStack();
         StackResult b = popStack();
         if (a.e != STACK_SUCCESS || b.e != STACK_SUCCESS) {
@@ -142,7 +142,7 @@ void executeWord(char* word) {
         pushStack(a.result);
         pushStack(b.result);
 	}
-	else if (strcmp(word, "DUP")) {
+	else if (strcmp(word, "DUP") == 0) {
         StackResult a = peepStack();
         if (a.e != STACK_SUCCESS) {
             goto STACK_UNDERFLOW_ERROR;
@@ -152,19 +152,19 @@ void executeWord(char* word) {
             goto STACK_OVERFLOW_ERROR;
         }
 	}
-	else if (strcmp(word, "ROT")) {
+	else if (strcmp(word, "ROT") == 0) {
 
 	}
-	else if (strcmp(word, "DROP")) {
+	else if (strcmp(word, "DROP") == 0) {
         StackResult a = popStack();
         if (a.e != STACK_SUCCESS) {
             goto STACK_UNDERFLOW_ERROR;
         }
 	}
-	else if (strcmp(word, ".")) {
+	else if (strcmp(word, ".") == 0) {
 
 	}
-	else if (strcmp(word, "EMIT")) {
+	else if (strcmp(word, "EMIT") == 0) {
 
 	}
     else {
@@ -188,7 +188,8 @@ void executeWord(char* word) {
     goto WORD_END_HANDLING;
 	WORD_SUCCESS:
     printf("RAN %s SUCCESSFULLY\n");
-    printf("TOP OF STACK: %i %i %i\n", stack[0], stack[1], stack[2]);
+    printf("TOP OF STACK: %i %i %i\n", stackLength < 3 ? -1 : stack[stackLength - 3], stackLength < 2 ? -1 : stack[stackLength - 2], stack[stackLength - 1]);
+    printf("STACK LENGTH: %i\n", stackLength);
     goto WORD_END_HANDLING;
     WORD_END_HANDLING:
     ;
