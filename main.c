@@ -47,7 +47,7 @@ typedef struct ForthToken_S ForthToken;
 STACK_TYPE stack[STACK_MAX_LENGTH];
 int stackLength = 0;
 char* pool; //initialized in main
-ForthWord dictionary[DICTIONARY_LENGTH]; //initialized in main
+ForthWord dictionary[DICTIONARY_LENGTH];
 
 enum StackError_E {
     STACK_SUCCESS,
@@ -89,7 +89,9 @@ StackResult pushStack(STACK_TYPE in) {
     stack[stackLength++] = in;
     return out;
 }
-void executeWord(char* word) {
+//returns if the interpreter must skip ahead steps: ex, there is a definition
+//TODO: function definition: words : and ;
+int executeWord(char* word, ForthToken* tokens) {
 	//TODO
 	//execute a builtin
 	if (strcmp(word, "+") == 0) {
@@ -124,7 +126,7 @@ void executeWord(char* word) {
         }
         pushStack(b.result / a.result);
 	}
-    else if (strcmp(word, "DIVMOD") == 0) {
+    else if (strcmp(word, "/MOD") == 0) {
         StackResult a = popStack();
         StackResult b = popStack();
         if (a.e != STACK_SUCCESS || b.e != STACK_SUCCESS) {
@@ -153,7 +155,16 @@ void executeWord(char* word) {
         }
 	}
 	else if (strcmp(word, "ROT") == 0) {
+        StackResult a = popStack();
+        StackResult b = popStack();
+        StackResult c = popStack();
 
+        if (a.e != STACK_SUCCESS || b.e != STACK_SUCCESS || c.e != STACK_SUCCESS) {
+            goto STACK_UNDERFLOW_ERROR;
+        }
+        pushStack(a.result);
+        pushStack(c.result);
+        pushStack(b.result);
 	}
 	else if (strcmp(word, "DROP") == 0) {
         StackResult a = popStack();
@@ -162,10 +173,18 @@ void executeWord(char* word) {
         }
 	}
 	else if (strcmp(word, ".") == 0) {
-
+        StackResult a = popStack();
+        if (a.e != STACK_SUCCESS) {
+            goto STACK_UNDERFLOW_ERROR;
+        }
+        printf("%i\n", a.result);
 	}
 	else if (strcmp(word, "EMIT") == 0) {
-
+        StackResult a = popStack();
+        if (a.e != STACK_SUCCESS) {
+            goto STACK_UNDERFLOW_ERROR;
+        }
+        printf("%i\n", a.result);
 	}
     else {
 	//TODO: else, go through the dictionary
@@ -192,7 +211,7 @@ void executeWord(char* word) {
     printf("STACK LENGTH: %i\n", stackLength);
     goto WORD_END_HANDLING;
     WORD_END_HANDLING:
-    ;
+    return 0;
 }
 
 
@@ -200,7 +219,6 @@ int main() {
     printf("tiny-forth, by Aearnus. version %s.\nTHIS SOFTWARE COMES WITH ABSOLUTELY NO WARRANTY. IT MAY COMPLETELY DESTROY YOUR COMPUTER.\n", VERSION);
     //initialize environment
     pool = malloc(POOL_SIZE);
-    //dictionary = calloc(DICTIONARY_LENGTH, sizeof(ForthWord));
     for (;;) {
         //begin read-compile-execute loop
         //read
@@ -234,7 +252,7 @@ int main() {
 				STACK_TYPE number;
 				pushStack(atoll(tokens[tokenIndex].name));
 			} else if (tokens[tokenIndex].isA == WORD) {
-				executeWord(tokens[tokenIndex].name);
+				tokenIndex += executeWord(tokens[tokenIndex].name, tokens);
 			}
 		}
 	//end repl loop
