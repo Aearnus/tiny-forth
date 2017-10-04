@@ -6,4 +6,4 @@ clean:
 	rm tiny-forth
 
 all:
-	gcc -lreadline -g -o tiny-forth main.c
+	gcc -lreadline -g -o tiny-forth run.c main.c
