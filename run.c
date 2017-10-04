@@ -1,5 +1,6 @@
 #include "run.h"
 #include "directives.h"
+#include "stack.h"
 
 StackResult popStack() {
     StackResult out;
@@ -11,6 +12,7 @@ StackResult popStack() {
     out.result = stack[--stackLength];
     return out;
 }
+
 StackResult peepStack() {
     StackResult out;
     if (stackLength <= 0) {
@@ -21,6 +23,7 @@ StackResult peepStack() {
     out.result = stack[stackLength - 1];
     return out;
 }
+
 StackResult pushStack(STACK_TYPE in) {
     StackResult out;
     if (stackLength >= STACK_MAX_LENGTH) {
@@ -30,6 +33,7 @@ StackResult pushStack(STACK_TYPE in) {
     stack[stackLength++] = in;
     return out;
 }
+
 //returns if the interpreter must skip ahead steps: ex, there is a definition
 //TODO: function definition: words : and ;
 int executeWord(char* word, ForthToken* tokens) {

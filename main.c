@@ -7,6 +7,7 @@
 #include "types.h"
 #include "directives.h"
 #include "run.h"
+#include "stack.h"
 
 ForthType whichType(char* name) {
     //char* numberChars = "-0123456789.";
