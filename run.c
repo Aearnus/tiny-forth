@@ -49,7 +49,7 @@ void runLine(char* input) {
             STACK_TYPE number;
             pushStack(atoll(tokens[tokenIndex].name));
         } else if (tokens[tokenIndex].isA == WORD) {
-            tokenIndex += executeWord(tokenIndex, tokens);
+            tokenIndex += executeWord(tokenIndex, tokens, tokenLength);
         }
     }
     //free token names
