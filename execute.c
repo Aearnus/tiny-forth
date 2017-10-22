@@ -3,10 +3,11 @@
 
 #include "types.h"
 #include "stack.h"
+#include "compile.h"
 
 //returns if the interpreter must skip ahead steps: ex, there is a definition
 //TODO: function definition: words : and ;
-int executeWord(int index, ForthToken* tokens, int tokenLength) {
+int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
     char* word = tokens[index].name;
 	//TODO
 	//execute a builtin
@@ -117,7 +118,7 @@ int executeWord(int index, ForthToken* tokens, int tokenLength) {
         if (index + wordsToSkip >= tokenLength) {
             goto DEFINITION_UNCLOSED_ERROR;
         } else {
-            // TODO: COMPILE
+            compileWord()
         }
     }
     else if (strcmp(word, ";") == 0) {
@@ -167,5 +168,6 @@ int executeWord(int index, ForthToken* tokens, int tokenLength) {
     goto WORD_END_HANDLING;
 
     WORD_END_HANDLING:
+    free(word);
     return 0;
 }

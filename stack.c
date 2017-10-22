@@ -3,6 +3,8 @@
 STACK_TYPE stack[STACK_MAX_LENGTH];
 int stackLength = 0;
 
+pool = malloc(POOL_SIZE)
+
 StackResult popStack() {
     StackResult out;
     if (stackLength <= 0) {
