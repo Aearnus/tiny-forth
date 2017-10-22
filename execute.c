@@ -159,9 +159,11 @@ int executeWord(int index, ForthToken* tokens, int tokenLength) {
     goto WORD_END_HANDLING;
 
 	WORD_SUCCESS:
-    printf("RAN %s SUCCESSFULLY\n", word);
-    printf("TOP OF STACK: %i %i %i\n", stackLength < 3 ? -1 : stack[stackLength - 3], stackLength < 2 ? -1 : stack[stackLength - 2], stack[stackLength - 1]);
-    printf("STACK LENGTH: %i\n", stackLength);
+    #ifdef DEBUG
+        printf("RAN %s SUCCESSFULLY\n", word);
+        printf("TOP OF STACK: %i %i %i\n", stackLength < 3 ? -1 : stack[stackLength - 3], stackLength < 2 ? -1 : stack[stackLength - 2], stack[stackLength - 1]);
+        printf("STACK LENGTH: %i\n", stackLength);
+    #endif
     goto WORD_END_HANDLING;
 
     WORD_END_HANDLING:
