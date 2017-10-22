@@ -93,14 +93,14 @@ int executeWord(int index, ForthToken* tokens, int tokenLength) {
         if (a.e != STACK_SUCCESS) {
             goto STACK_UNDERFLOW_ERROR;
         }
-        printf("%i\n", a.result);
+        printf("\e[38;5;196m%lli\e[0m\n", a.result);
 	}
 	else if (strcmp(word, "EMIT") == 0) {
         StackResult a = popStack();
         if (a.e != STACK_SUCCESS) {
             goto STACK_UNDERFLOW_ERROR;
         }
-        printf("%i\n", a.result);
+        printf("%c\n", a.result % 256);
 	}
     //compilation words!
     else if (strcmp(word, ":") == 0) {
@@ -159,7 +159,7 @@ int executeWord(int index, ForthToken* tokens, int tokenLength) {
     goto WORD_END_HANDLING;
 
 	WORD_SUCCESS:
-    printf("RAN %s SUCCESSFULLY\n");
+    printf("RAN %s SUCCESSFULLY\n", word);
     printf("TOP OF STACK: %i %i %i\n", stackLength < 3 ? -1 : stack[stackLength - 3], stackLength < 2 ? -1 : stack[stackLength - 2], stack[stackLength - 1]);
     printf("STACK LENGTH: %i\n", stackLength);
     goto WORD_END_HANDLING;
