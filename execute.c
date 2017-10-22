@@ -6,9 +6,10 @@
 #include "compile.h"
 
 //returns if the interpreter must skip ahead steps: ex, there is a definition
-//TODO: function definition: words : and ;
 int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
     char* word = tokens[index].name;
+    //for a definition
+    int wordsToSkip = 0;
 	//TODO
 	//execute a builtin
 	if (strcmp(word, "+") == 0) {
@@ -118,10 +119,18 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
         if (index + wordsToSkip >= tokenLength) {
             goto DEFINITION_UNCLOSED_ERROR;
         } else {
+            //make sure it is not a malformed definition
+            //AKA: make sure we have a word and a definition
+            if (wordsToSkip < 3) {
+                goto DEFINITION_IMPROPER_ERROR;
+            }
             compileWord()
         }
     }
     else if (strcmp(word, ";") == 0) {
+        //we should never have to parse one of these! they should be skipped
+        //by the handler on :
+        goto DEFINITION_UNOPENED_ERROR;
     }
 
     else {
@@ -169,5 +178,5 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
 
     WORD_END_HANDLING:
     free(word);
-    return 0;
+    return wordsToSkip;
 }
