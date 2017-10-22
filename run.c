@@ -5,7 +5,7 @@
 #include "types.h"
 #include "run.h"
 #include "directives.h"
-#include "stack.h"
+#include "memory.h"
 #include "execute.h"
 
 ForthType whichType(char* name) {

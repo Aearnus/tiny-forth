@@ -7,7 +7,7 @@
 #include "types.h"
 #include "directives.h"
 #include "run.h"
-#include "stack.h"
+#include "memory.h"
 
 //establish forth environment
 ForthWord dictionary[DICTIONARY_LENGTH];

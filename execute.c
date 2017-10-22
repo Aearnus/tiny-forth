@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include "types.h"
-#include "stack.h"
+#include "memory.h"
 #include "compile.h"
 
 //returns if the interpreter must skip ahead steps: ex, there is a definition

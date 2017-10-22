@@ -1,4 +1,4 @@
-#include "stack.h"
+#include "memory.h"
 
 STACK_TYPE stack[STACK_MAX_LENGTH];
 int stackLength = 0;
