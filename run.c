@@ -56,5 +56,6 @@ void runLine(char* input) {
     for (int tokenIndex = 0; tokenIndex < tokenLength; tokenIndex++) {
         //TODO: FIX THIS. WHY CAN'T I FREE THE TOKEN NAMES? THIS IS A MEMORY LEAK
         //free(tokens[tokenIndex].name);
+        //ACTUALLY, THESE WORDS ARE PROBABLY FREED AT THE END OF EXECUTE.C'S EXECUTEWORD()
     }
 }

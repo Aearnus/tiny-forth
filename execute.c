@@ -109,7 +109,7 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
         #ifdef DEBUG
             printf("BEGIN DEFINITION\n");
         #endif
-        int definitionLength = 1;
+        definitionLength = 1;
         //start the counter to tell the executor to skip to the end of the definition
         while (index + definitionLength < tokenLength) {
             if (strcmp(tokens[index + definitionLength].name, ";") == 0) {
@@ -186,6 +186,11 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
     goto WORD_END_HANDLING;
 
     WORD_END_HANDLING:
+    #ifdef DEBUG
+        if (definitionLength != 0) {
+            printf("SKIPPING AHEAD %i WORDS\n", definitionLength);
+        }
+    #endif
     free(word);
     return definitionLength;
 }
