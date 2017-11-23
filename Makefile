@@ -1,4 +1,4 @@
-FILES=main.c run.c memory.c execute.c
+FILES=main.c run.c memory.c execute.c compile.c
 
 debug:
 	gcc -DDEBUG -lreadline -o tiny-forth-debug $(FILES)
