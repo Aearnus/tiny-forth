@@ -124,7 +124,7 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
         } else {
             //make sure it is not a malformed definition
             //AKA: make sure we have a word and a definition
-            if (wordsToSkip < 3) {
+            if (definitionLength < 3) {
                 goto DEFINITION_IMPROPER_ERROR;
             }
             #ifdef DEBUG
