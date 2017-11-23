@@ -1,9 +1,8 @@
 #include "memory.h"
 
 STACK_TYPE stack[STACK_MAX_LENGTH];
-int stackLength = 0;
-
-pool = malloc(POOL_SIZE)
+int stackLength;
+char* pool;
 
 StackResult popStack() {
     StackResult out;
@@ -35,4 +34,13 @@ StackResult pushStack(STACK_TYPE in) {
     out.e = STACK_SUCCESS;
     stack[stackLength++] = in;
     return out;
+}
+
+void initMemory() {
+    stackLength = 0;
+    pool = malloc(POOL_SIZE);
+}
+
+void freeMemory() {
+    free(pool);
 }

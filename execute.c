@@ -124,7 +124,7 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
             if (wordsToSkip < 3) {
                 goto DEFINITION_IMPROPER_ERROR;
             }
-            compileWord()
+            //TODO: compileWord()
         }
     }
     else if (strcmp(word, ";") == 0) {
