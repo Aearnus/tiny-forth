@@ -9,7 +9,7 @@
 int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
     char* word = tokens[index].name;
     //for a definition
-    int wordsToSkip = 0;
+    int definitionLength = 0;
 	//TODO
 	//execute a builtin
 	if (strcmp(word, "+") == 0) {
@@ -187,5 +187,5 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
 
     WORD_END_HANDLING:
     free(word);
-    return wordsToSkip;
+    return definitionLength;
 }
