@@ -128,7 +128,7 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
                 goto DEFINITION_IMPROPER_ERROR;
             }
             #ifdef DEBUG
-                printf("SUCCESSFUL DEFINITION OF WORD %s. DEFINITION LENGTH %i.\n", tokens[index + 1].name, wordsToSkip);
+                printf("SUCCESSFUL DEFINITION OF WORD %s. DEFINITION LENGTH %i.\n", tokens[index + 1].name, definitionLength);
             #endif
             compileWord(tokens[index + 1].name, NULL, definitionLength);
         }
