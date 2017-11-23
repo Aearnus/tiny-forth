@@ -27,6 +27,6 @@ int main() {
     }
     //clean up environment
     free(pool);
-    free(dictionary);
+    //free(dictionary);
     freeMemory();
 }
