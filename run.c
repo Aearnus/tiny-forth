@@ -54,6 +54,7 @@ void runLine(char* input) {
     }
     //free token names
     for (int tokenIndex = 0; tokenIndex < tokenLength; tokenIndex++) {
-        free(tokens[tokenIndex].name);
+        //TODO: FIX THIS. WHY CAN'T I FREE THE TOKEN NAMES? THIS IS A MEMORY LEAK
+        //free(tokens[tokenIndex].name);
     }
 }
