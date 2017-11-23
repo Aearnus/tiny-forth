@@ -106,17 +106,20 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
 	}
     //compilation words!
     else if (strcmp(word, ":") == 0) {
-        int wordsToSkip = 1;
+        #ifdef DEBUG
+            printf("BEGIN DEFINITION\n");
+        #endif
+        int definitionLength = 1;
         //start the counter to tell the executor to skip to the end of the definition
-        while (index + wordsToSkip < tokenLength) {
-            if (strcmp(tokens[index + wordsToSkip].name, ";") == 0) {
+        while (index + definitionLength < tokenLength) {
+            if (strcmp(tokens[index + definitionLength].name, ";") == 0) {
                 break;
             }
-            wordsToSkip++;
+            definitionLength++;
         }
         //if it broke because we were outside the bounds instead of because we
         //found a semicolon word
-        if (index + wordsToSkip >= tokenLength) {
+        if (index + definitionLength >= tokenLength) {
             goto DEFINITION_UNCLOSED_ERROR;
         } else {
             //make sure it is not a malformed definition
@@ -124,8 +127,14 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
             if (wordsToSkip < 3) {
                 goto DEFINITION_IMPROPER_ERROR;
             }
-            //TODO: compileWord()
+            #ifdef DEBUG
+                printf("SUCCESSFUL DEFINITION OF WORD %s. DEFINITION LENGTH %i.\n", tokens[index + 1].name, wordsToSkip);
+            #endif
+            compileWord(tokens[index + 1].name, NULL, definitionLength);
         }
+        #ifdef DEBUG
+            printf("END DEFINITION\n");
+        #endif
     }
     else if (strcmp(word, ";") == 0) {
         //we should never have to parse one of these! they should be skipped
