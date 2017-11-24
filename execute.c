@@ -4,6 +4,7 @@
 #include "types.h"
 #include "memory.h"
 #include "compile.h"
+#include "run.h"
 
 //returns if the interpreter must skip ahead steps: ex, there is a definition
 int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
@@ -157,6 +158,17 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
 
     else {
 	//TODO: else, go through the dictionary
+        // dictionary and dictionaryLength are defined in memory.h
+        for (int dictIndex = 0; dictIndex < dictionaryLength; dictIndex++) {
+            ForthDef currentDef = dictionary[dictIndex];
+            if (strcmp(word, currentDef.name) == 0) {
+                #ifdef DEBUG
+                    printf("RUNNING CUSTOM WORD %s\n", currentDef.name);
+                #endif
+                runDefinition(currentDef);
+            }
+        }
+        //if the word couldn't be found in the dictionary
         goto UNKNOWN_WORD_ERROR;
     }
 
