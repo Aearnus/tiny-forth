@@ -8,7 +8,7 @@ enum ForthType_E {
 typedef enum ForthType_E ForthType;
 
 struct ForthToken_S {
-    const char* name;
+    char* name;
     ForthType isA;
 };
 typedef struct ForthToken_S ForthToken;
@@ -30,3 +30,5 @@ struct StackResult_S {
     STACK_TYPE result;
 };
 typedef struct StackResult_S StackResult;
+
+#define strCpyNew(str) strcpy(malloc(strlen(str)), str)

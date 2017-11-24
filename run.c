@@ -8,7 +8,7 @@
 #include "memory.h"
 #include "execute.h"
 
-ForthType whichType(char* name) {
+ForthType whichType(const char* name) {
     //char* numberChars = "-0123456789.";
     char* numberChars = "-0123456789";
     int i;
