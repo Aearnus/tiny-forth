@@ -4,3 +4,4 @@
 #include "types.h"
 
 void runLine(char* input);
+void runDefinition(ForthToken* tokens);

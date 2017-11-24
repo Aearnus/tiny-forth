@@ -59,3 +59,17 @@ void runLine(char* input) {
         //ACTUALLY, THESE WORDS ARE PROBABLY FREED AT THE END OF EXECUTE.C'S EXECUTEWORD()
     }
 }
+
+//skip the parse
+void runDefinition(ForthToken* tokens) {
+    //execute
+    for (int tokenIndex = 0; tokenIndex < tokenLength; tokenIndex++) {
+        //handle numbers first
+        if (tokens[tokenIndex].isA == NUMBER) {
+            STACK_TYPE number;
+            pushStack(atoll(tokens[tokenIndex].name));
+        } else if (tokens[tokenIndex].isA == WORD) {
+            tokenIndex += executeWord(tokenIndex, tokens, tokenLength);
+        }
+    }
+}
