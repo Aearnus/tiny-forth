@@ -9,7 +9,7 @@
 int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
     char* word = tokens[index].name;
     //for a definition
-    int definitionLength = 0;
+    int defLength = 0;
 	//TODO
 	//execute a builtin
 	if (strcmp(word, "+") == 0) {
@@ -102,38 +102,51 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
         if (a.e != STACK_SUCCESS) {
             goto STACK_UNDERFLOW_ERROR;
         }
-        printf("%c\n", a.result % 256);
+        printf("%c", a.result % 256);
 	}
     //compilation words!
     else if (strcmp(word, ":") == 0) {
         #ifdef DEBUG
             printf("BEGIN DEFINITION\n");
         #endif
-        definitionLength = 1;
+        defLength = 1;
         //start the counter to tell the executor to skip to the end of the definition
-        while (index + definitionLength < tokenLength) {
-            if (strcmp(tokens[index + definitionLength].name, ";") == 0) {
+        //also, begin copying tokens to the definitionArray
+        while (index + defLength < tokenLength) {
+            if (strcmp(tokens[index + defLength].name, ";") == 0) {
                 break;
             }
-            definitionLength++;
+            defLength++;
         }
         //if it broke because we were outside the bounds instead of because we
         //found a semicolon word
-        if (index + definitionLength >= tokenLength) {
+        if (index + defLength >= tokenLength) {
             goto DEFINITION_UNCLOSED_ERROR;
         } else {
             //make sure it is not a malformed definition
             //AKA: make sure we have a word and a definition
-            if (definitionLength < 3) {
+            if (defLength < 3) {
                 goto DEFINITION_IMPROPER_ERROR;
             }
             #ifdef DEBUG
-                printf("SUCCESSFUL DEFINITION OF WORD %s. DEFINITION LENGTH %i.\n", tokens[index + 1].name, definitionLength);
+                printf("SUCCESSFUL DEFINITION OF WORD %s. DEFINITION LENGTH %i.\nDEFINTION:\n    ", tokens[index + 1].name, defLength);
             #endif
-            compileWord(tokens[index + 1].name, NULL, definitionLength);
+            //if EVERYTHING is good, allocate memory and go through and copy tokens
+            ForthToken def[defLength];
+            for (int defIndex = 2; defIndex < defLength; defIndex++) {
+                ForthToken currentSrcToken = tokens[index + defIndex];
+                ForthToken currentDefToken;
+                currentDefToken.isA = currentSrcToken.isA;
+                currentDefToken.name = strcpy(malloc(strlen(currentSrcToken.name)), currentSrcToken.name);
+                def[defIndex - 1] = currentDefToken;
+                #ifdef DEBUG
+                    printf("%s ", def[defIndex - 1]);
+                #endif
+            }
+            compileWord(tokens[index + 1].name, def, defLength);
         }
         #ifdef DEBUG
-            printf("END DEFINITION\n");
+            printf("\nEND DEFINITION\n");
         #endif
     }
     else if (strcmp(word, ";") == 0) {
@@ -187,10 +200,10 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
 
     WORD_END_HANDLING:
     #ifdef DEBUG
-        if (definitionLength != 0) {
-            printf("SKIPPING AHEAD %i WORDS\n", definitionLength);
+        if (defLength != 0) {
+            printf("SKIPPING AHEAD %i WORDS\n", defLength);
         }
     #endif
     free(word);
-    return definitionLength;
+    return defLength;
 }
