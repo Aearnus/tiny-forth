@@ -61,7 +61,7 @@ void runLine(char* input) {
 }
 
 //skip the parse
-void runDefinition(ForthToken* tokens) {
+void runDefinition(ForthToken* tokens, int tokenLenth) {
     //execute
     for (int tokenIndex = 0; tokenIndex < tokenLength; tokenIndex++) {
         //handle numbers first
