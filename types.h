@@ -1,12 +1,5 @@
 #pragma once
-
 #include "directives.h"
-
-struct ForthWord_S {
-    char* name;
-    struct ForthWord_S* definition;
-};
-typedef struct ForthWord_S ForthWord;
 
 enum ForthType_E {
     WORD,
@@ -15,10 +8,16 @@ enum ForthType_E {
 typedef enum ForthType_E ForthType;
 
 struct ForthToken_S {
-    char* name;
+    const char* name;
     ForthType isA;
 };
 typedef struct ForthToken_S ForthToken;
+
+struct ForthDef_S {
+    const char* name;
+    struct ForthToken_S* definition;
+};
+typedef struct ForthDef_S ForthDef;
 
 enum StackError_E {
     STACK_SUCCESS,

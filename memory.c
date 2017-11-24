@@ -4,6 +4,9 @@ STACK_TYPE stack[STACK_MAX_LENGTH];
 int stackLength;
 char* pool;
 
+ForthDef dictionary[DICTIONARY_LENGTH];
+int dictionaryLength;
+
 StackResult popStack() {
     StackResult out;
     if (stackLength <= 0) {
@@ -39,6 +42,8 @@ StackResult pushStack(STACK_TYPE in) {
 void initMemory() {
     stackLength = 0;
     pool = malloc(POOL_SIZE);
+
+    dictionaryLength = 0;
 }
 
 void freeMemory() {

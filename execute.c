@@ -5,6 +5,10 @@
 #include "memory.h"
 #include "compile.h"
 
+const char* strCpyConst(char* str) {
+    return strcpy(malloc(strlen(str)), str);
+}
+
 //returns if the interpreter must skip ahead steps: ex, there is a definition
 int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
     char* word = tokens[index].name;
@@ -137,13 +141,13 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
                 ForthToken currentSrcToken = tokens[index + defIndex];
                 ForthToken currentDefToken;
                 currentDefToken.isA = currentSrcToken.isA;
-                currentDefToken.name = strcpy(malloc(strlen(currentSrcToken.name)), currentSrcToken.name);
+                currentDefToken.name = strCpyConst(currentSrcToken.name);
                 def[defIndex - 1] = currentDefToken;
                 #ifdef DEBUG
                     printf("%s ", def[defIndex - 1]);
                 #endif
             }
-            compileWord(tokens[index + 1].name, def, defLength);
+            compileWord(strCpyConst(tokens[index + 1].name), def, defLength);
         }
         #ifdef DEBUG
             printf("\nEND DEFINITION\n");
@@ -204,6 +208,6 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
             printf("SKIPPING AHEAD %i WORDS\n", defLength);
         }
     #endif
-    free(word);
+    free(word); word = NULL;
     return defLength;
 }

@@ -14,4 +14,5 @@ extern STACK_TYPE stack[];
 extern int stackLength;
 extern char* pool;
 
-extern ForthWord dictionary[DICTIONARY_LENGTH];
+extern ForthDef dictionary[];
+extern int dictionaryLength;
