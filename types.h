@@ -16,6 +16,7 @@ typedef struct ForthToken_S ForthToken;
 struct ForthDef_S {
     const char* name;
     struct ForthToken_S* definition;
+    int definitionLength;
 };
 typedef struct ForthDef_S ForthDef;
 
