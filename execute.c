@@ -157,10 +157,15 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
     }
 
     else {
-	//TODO: else, go through the dictionary
         // dictionary and dictionaryLength are defined in memory.h
+        #ifdef DEBUG
+            printf("GOING THROUGH DICTIONARY\n");
+        #endif
         for (int dictIndex = 0; dictIndex < dictionaryLength; dictIndex++) {
             ForthDef currentDef = dictionary[dictIndex];
+            #ifdef DEBUG
+                printf("CHECKING DICTIONARY ENTRY %s\n", currentDef.name);
+            #endif
             if (strcmp(word, currentDef.name) == 0) {
                 #ifdef DEBUG
                     printf("RUNNING CUSTOM WORD %s\n", currentDef.name);
