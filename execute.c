@@ -171,6 +171,7 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
                     printf("RUNNING CUSTOM WORD %s\n", currentDef.name);
                 #endif
                 runDefinition(currentDef);
+                goto WORD_SUCCESS;
             }
         }
         //if the word couldn't be found in the dictionary
@@ -210,7 +211,7 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
 	WORD_SUCCESS:
     #ifdef DEBUG
         printf("RAN %s SUCCESSFULLY\n", word);
-        printf("TOP OF STACK: %i %i %i\n", stackLength < 3 ? -1 : stack[stackLength - 3], stackLength < 2 ? -1 : stack[stackLength - 2], stack[stackLength - 1]);
+        printf("TOP OF STACK: %i %i %i\n", stackLength < 3 ? -1 : stack[stackLength - 3], stackLength < 2 ? -1 : stack[stackLength - 2], stackLength < 1 ? -1 : stack[stackLength - 1]);
         printf("STACK LENGTH: %i\n", stackLength);
     #endif
     goto WORD_END_HANDLING;
