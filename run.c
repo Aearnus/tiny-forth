@@ -64,8 +64,14 @@ void runLine(char* input) {
 void runDefinition(ForthDef definition) {
     ForthToken* tokens = definition.definition;
     int tokenLength = definition.definitionLength;
+    #ifdef DEBUG
+        printf("RUNNING DEFINITION OF LENGTH %i\nDEFINITION:\n   ", tokenLength);
+    #endif
     //execute
     for (int tokenIndex = 0; tokenIndex < tokenLength; tokenIndex++) {
+        #ifdef DEBUG
+            printf("%s ", tokens[tokenIndex].name);
+        #endif
         //handle numbers first
         if (tokens[tokenIndex].isA == NUMBER) {
             STACK_TYPE number;

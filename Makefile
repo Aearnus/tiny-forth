@@ -8,4 +8,4 @@ clean:
 	rm tiny-forth
 
 all:
-	gcc -lreadline -g -o tiny-forth $(FILES)
+	gcc -lreadline -g3 -o tiny-forth $(FILES)
