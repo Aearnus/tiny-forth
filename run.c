@@ -61,23 +61,21 @@ void runLine(char* input) {
 }
 
 //skip the parse
-void runDefinition(ForthDef definition) {
-    ForthToken* tokens = definition.definition;
-    int tokenLength = definition.definitionLength;
+void runDefinition(ForthDef def) {
     #ifdef DEBUG
-        printf("RUNNING DEFINITION OF LENGTH %i\nDEFINITION:\n   ", tokenLength);
+        printf("RUNNING DEFINITION OF LENGTH %i\nDEFINITION:\n   ", def.definitionLength);
     #endif
     //execute
-    for (int tokenIndex = 0; tokenIndex < tokenLength; tokenIndex++) {
+    for (int tokenIndex = 0; tokenIndex < def.definitionLength; tokenIndex++) {
         #ifdef DEBUG
-            printf("%s ", tokens[tokenIndex].name);
+            printf("%s ", def.definition[tokenIndex].name);
         #endif
         //handle numbers first
-        if (tokens[tokenIndex].isA == NUMBER) {
+        if (def.definition[tokenIndex].isA == NUMBER) {
             STACK_TYPE number;
-            pushStack(atoll(tokens[tokenIndex].name));
-        } else if (tokens[tokenIndex].isA == WORD) {
-            tokenIndex += executeWord(tokenIndex, tokens, tokenLength);
+            pushStack(atoll(def.definition[tokenIndex].name));
+        } else if (def.definition[tokenIndex].isA == WORD) {
+            tokenIndex += executeWord(tokenIndex, def.definition, def.definitionLength);
         }
     }
 }

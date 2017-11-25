@@ -168,7 +168,11 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
             #endif
             if (strcmp(word, currentDef.name) == 0) {
                 #ifdef DEBUG
-                    printf("RUNNING CUSTOM WORD %s\n", currentDef.name);
+                    printf("RUNNING CUSTOM WORD %s\nDEFINITION FROM EXECUTEWORD():\n   ", currentDef.name);
+                    for (int i = 0; i < currentDef.definitionLength; i++) {
+                        printf("%s ", currentDef.definition[i]);
+                    }
+                    printf("\n");
                 #endif
                 runDefinition(currentDef);
                 goto WORD_SUCCESS;
