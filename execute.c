@@ -133,15 +133,23 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
                 printf("SUCCESSFUL DEFINITION OF WORD %s. DEFINITION LENGTH %i.\nDEFINTION:\n    ", tokens[index + 1].name, defLength);
             #endif
             //if EVERYTHING is good, allocate memory and go through and copy tokens
-            ForthToken def[defLength];
+            ForthToken def[defLength - 2];
             for (int defIndex = 2; defIndex < defLength; defIndex++) {
+                //justification for this magic number is at the bottom of
+                //compile.c. it is also copied here:
+                //
+                //there is a magic number here:
+                //the definition length from the other file actually
+                //also contains the name and the ; at the end of the
+                //definition. thus, the - 2 removes those two.
+                int defOutIndex = defIndex - 2;
                 ForthToken currentSrcToken = tokens[index + defIndex];
                 ForthToken currentDefToken;
                 currentDefToken.isA = currentSrcToken.isA;
                 currentDefToken.name = strCpyNew(currentSrcToken.name);
-                def[defIndex - 1] = currentDefToken;
+                def[defOutIndex] = currentDefToken;
                 #ifdef DEBUG
-                    printf("%s ", def[defIndex - 1]);
+                    printf("%s ", def[defOutIndex]);
                 #endif
             }
             compileWord(strCpyNew(tokens[index + 1].name), def, defLength);
@@ -163,12 +171,9 @@ int executeWord(int index, ForthToken* tokens, size_t tokenLength) {
         #endif
         for (int dictIndex = 0; dictIndex < dictionaryLength; dictIndex++) {
             ForthDef currentDef = dictionary[dictIndex];
-            #ifdef DEBUG
-                printf("CHECKING DICTIONARY ENTRY %s\n", currentDef.name);
-            #endif
             if (strcmp(word, currentDef.name) == 0) {
                 #ifdef DEBUG
-                    printf("RUNNING CUSTOM WORD %s\nDEFINITION FROM EXECUTEWORD():\n   ", currentDef.name);
+                    printf("RUNNING CUSTOM WORD %s\nDEFINITION LENGTH %i\nDEFINITION FROM EXECUTEWORD():\n   ", currentDef.name, currentDef.definitionLength);
                     for (int i = 0; i < currentDef.definitionLength; i++) {
                         printf("%s ", currentDef.definition[i]);
                     }
